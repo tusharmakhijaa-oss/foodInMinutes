@@ -39,10 +39,11 @@ class UserManager(BaseUserManager):
 
     
 class User(AbstractBaseUser):
-    RESTURANT = 1
+    VENDOR = 1
     CUSTOMER = 2
+
     ROLE_CHOICES = (
-        (RESTURANT, 'Resturant'),
+        (VENDOR, 'Vendor'),
         (CUSTOMER, 'Customer'),
     )
     email = models.EmailField(max_length=100, unique=True)
