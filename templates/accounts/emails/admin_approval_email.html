@@ -1,0 +1,11 @@
+{% autoescape off %}
+
+Hi {{user.first_name}}
+
+{% if is_approved%}
+"Congratulations! Your resturant has been approved by our admin team"
+{% else %}
+We're sorry ! You are not eligble for publshing your food menu on our marketplace.For more details contact support@foodinminutes.com
+{% endif %}
+
+{% endautoescape %}
