@@ -66,6 +66,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 'accounts.context_processor.get_vendor',
+                'accounts.context_processor.get_google_api',
             ],
         },
     },
@@ -160,3 +161,5 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+
+GOOGLE_API_KEY = 'AIzaSyDZLxb9T8qGoQkqjd-gSn7jumbgI3neTdI'

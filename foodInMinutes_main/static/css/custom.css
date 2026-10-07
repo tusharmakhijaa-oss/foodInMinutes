@@ -20,3 +20,16 @@
     font-size: 12px;
     cursor: pointer;
 }
+
+:root {
+    color-scheme: light;
+}
+
+gmp-place-autocomplete {
+    color-scheme: light;
+    display: block;
+    width: 100%;
+    --gmp-mat-color-surface: #ffffff;
+    --gmp-mat-color-on-surface: #212529;
+    --gmp-mat-color-outline: #ced4da;
+}
