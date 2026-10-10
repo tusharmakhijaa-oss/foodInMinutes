@@ -23,8 +23,8 @@ class Category(models.Model):
 
 class Fooditem(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    category_name = models.CharField(max_length=50, unique=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='fooditems')
+    category_name = models.CharField(max_length=50)
     food_title = models.CharField(max_length=50)
     slug = models.SlugField(max_length=100, unique=True)
     description = models.TextField(max_length=250, blank=True)   
@@ -36,4 +36,10 @@ class Fooditem(models.Model):
 
     def __str__(self):
         return self.food_title
-    
+
+    def save(self, *args, **kwargs):
+        self.category_name = self.category.category_name
+        super().save(*args, **kwargs)
+
+
+        
