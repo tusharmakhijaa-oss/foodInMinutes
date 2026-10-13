@@ -33,3 +33,24 @@ gmp-place-autocomplete {
     --gmp-mat-color-on-surface: #212529;
     --gmp-mat-color-outline: #ced4da;
 }
+
+/* .login-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.login-option > a,
+.login-option > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    box-sizing: border-box;
+} */
+
+.login-option > span > a {
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+}

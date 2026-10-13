@@ -10,6 +10,7 @@ class Vendor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='vendor_profile')
     user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='user_profile', null=True, blank=True)
     vendor_name = models.CharField(max_length=100)
+    vendor_slug=models.SlugField(max_length=100, unique=True)
     vendor_license_number = models.ImageField(upload_to='vendor/license')
     is_approved = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -28,6 +29,7 @@ class Vendor(models.Model):
                 context = {
                     'user': self.user,
                     'is_approved' : self.is_approved,
+                    'to_email': self.user.email,
                 }
                 if self.is_approved == True:
                     # send notification email
