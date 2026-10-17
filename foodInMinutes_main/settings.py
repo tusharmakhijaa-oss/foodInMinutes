@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django.contrib.gis',
 
     'accounts',
     'vendor',
@@ -85,7 +86,7 @@ WSGI_APPLICATION = "foodInMinutes_main.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": config('DATABASE_NAME'),
         "USER": config('DATABASE_USER'),
         "PASSWORD": config('DATABASE_PASSWORD'),
@@ -137,7 +138,7 @@ STATICFILES_DIRS = [
     "foodInMinutes_main/static"
 ]
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/ media /'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 

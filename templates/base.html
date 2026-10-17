@@ -35,11 +35,11 @@
 	</script>  {% endcomment %}
 
 
-	{% if '/profile/' in request.GET %}
+	{% comment %} {% if '/profile/' in request.path %} {% endcomment %}
 	<script async
 	src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&loading=async&callback=initAutoComplete">
 	</script>
-	{% endif %}
+	{% comment %} {% endif %} {% endcomment %}
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	<script src="{% static 'js/custom.js' %}"></script>
 

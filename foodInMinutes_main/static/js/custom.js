@@ -1,7 +1,6 @@
-let autocomplete;
+/* let autocomplete;
 
 async function initAutoComplete() {
-    console.log("initAutoComplete called");
 
     const { PlaceAutocompleteElement } = await google.maps.importLibrary("places");
 
@@ -11,8 +10,8 @@ async function initAutoComplete() {
         // default in this app is "IN" - add your country code
         includedRegionCodes: ["in"],
     });
-    autocomplete.id = "address_autocomplete";
-    autocomplete.setAttribute("placeholder", "Start typing...");
+    // autocomplete.id = "address_autocomplete";
+    // autocomplete.setAttribute("placeholder", "Start typing...");
 
     // Show the new element, and keep the old input hidden inside the form
     // so Django still receives the value on submit.
@@ -54,6 +53,99 @@ async function onPlaceChanged({ placePrediction }) {
     document.getElementById("id_city").value      = get("locality");
     document.getElementById("id_state").value     = get("administrative_area_level_1");
     document.getElementById("id_pin_code").value   = get("postal_code");
+}
+
+window.initAutoComplete = initAutoComplete; */
+
+let sessionToken;
+let debounceTimer;
+let AutocompleteSuggestion, AutocompleteSessionToken;
+
+async function initAutoComplete() {
+    const input = document.getElementById("id_address");
+    const list = document.getElementById("address_suggestions");
+    if (!input || !list) return; // page has no address field
+
+    ({ AutocompleteSuggestion, AutocompleteSessionToken } =
+        await google.maps.importLibrary("places"));
+
+    sessionToken = new AutocompleteSessionToken();
+
+    input.addEventListener("input", () => {
+        clearTimeout(debounceTimer);
+        const query = input.value.trim();
+
+        if (query.length < 3) {
+            list.innerHTML = "";
+            return;
+        }
+
+        debounceTimer = setTimeout(async () => {
+            try {
+                const { suggestions } =
+                    await AutocompleteSuggestion.fetchAutocompleteSuggestions({
+                        input: query,
+                        includedRegionCodes: ["in"],
+                        sessionToken,
+                    });
+                renderSuggestions(suggestions);
+            } catch (err) {
+                console.error("Autocomplete error:", err);
+            }
+        }, 250);
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!list.contains(e.target) && e.target !== input) list.innerHTML = "";
+    });
+}
+
+function renderSuggestions(suggestions) {
+    const list = document.getElementById("address_suggestions");
+    list.innerHTML = "";
+
+    suggestions.forEach((s) => {
+        const prediction = s.placePrediction;
+        if (!prediction) return;
+
+        const item = document.createElement("div");
+        item.className = "address-suggestion-item";
+        item.textContent = prediction.text.text;
+        item.addEventListener("click", () => onPlaceChanged(prediction));
+        list.appendChild(item);
+    });
+}
+
+async function onPlaceChanged(placePrediction) {
+    const place = placePrediction.toPlace();
+
+    await place.fetchFields({
+        fields: ["displayName", "formattedAddress", "location", "addressComponents"],
+    });
+
+    if (!place.location) return;
+
+    document.getElementById("id_address").value = place.formattedAddress || "";
+    document.getElementById("address_suggestions").innerHTML = "";
+
+    const get = (type) => {
+        const c = (place.addressComponents || []).find((x) => x.types.includes(type));
+        return c ? c.longText : "";
+    };
+
+    const setVal = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.value = value;
+    };
+
+    setVal("id_latitude", place.location.lat());
+    setVal("id_longitude", place.location.lng());
+    setVal("id_country", get("country"));
+    setVal("id_city", get("locality"));
+    setVal("id_state", get("administrative_area_level_1"));
+    setVal("id_pin_code", get("postal_code"));
+
+    sessionToken = new AutocompleteSessionToken();
 }
 
 window.initAutoComplete = initAutoComplete;
